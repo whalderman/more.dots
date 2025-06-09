@@ -1,0 +1,16 @@
+[user]
+	email = halderman.warren@gmail.com
+	name = Warren Halderman
+[init]
+	defaultBranch = master
+[diff]
+	algorithm = histogram
+[core]
+	editor = /usr/bin/nvim
+; not sure if this is worth storing
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
