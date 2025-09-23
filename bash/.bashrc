@@ -52,3 +52,23 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # deno
 . "/home/warrenh/.deno/env"
 source /home/warrenh/.local/share/bash-completion/completions/deno.bash
+
+# flutter
+export PATH="$HOME/.flutter/flutter/bin:$PATH"
+
+# fnm
+FNM_PATH="/home/warrenh/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "`fnm env`"
+fi
+
+# fnm
+FNM_PATH="/home/warrenh/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "`fnm env`"
+fi
+
+PROMPT_COMMAND='PS1_CMD1=$(git branch --show-current 2>/dev/null)'; PS1='\n\[\e[37m\]\u\[\e[90m\]@\h\[\e[0m\] \[\e[96m\]\w\[\e[0m\] \[\e[36m\]${PS1_CMD1}\[\e[0m\]\\$ '
+
