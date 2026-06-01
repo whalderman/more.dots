@@ -109,44 +109,75 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+	desc = 'Highlight when yanking (copying) text',
+	callback = function()
+		vim.highlight.on_yank()
+	end,
 })
 
 -- PLUGINS
 -- See `:h :packadd`, `:h vim.pack`
 
+-- If hooks need to run on install, run this before `vim.pack.add()`
+-- To act on install from lockfile, run before very first `vim.pack.add()`
+vim.api.nvim_create_autocmd('PackChanged', {
+	callback = function(ev)
+		-- Use available |event-data|
+		local name, kind = ev.data.spec.name, ev.data.kind
+
+		if kind == 'install' or kind == 'update' then
+			-- plugins to `make`
+			if name == 'telescope-fzf-native.nvim' then
+				vim.system({ "make" }, { cwd = ev.data.path }):wait(--[[ dependency for telescope ]])
+			end
+		end
+	end
+})
+
+local gh = function(x)
+	return 'https://github.com/' .. x
+end
+
+-- theme
+vim.pack.add({ gh 'sainnhe/everforest' })
+vim.g.everforest_background = 'hard'
+vim.o.background = 'dark'
+vim.cmd.colorscheme('everforest')
+
 -- Add the "nohlsearch" package to automatically disable search highlighting after
 -- 'updatetime' and when going to insert mode.
 vim.cmd 'packadd! nohlsearch'
 
-local gh = function(x)
-  return 'https://github.com/' .. x
-end
-
 -- Install third-party plugins via "vim.pack.add()".
-vim.pack.add {
-  -- Quickstart configs for LSP
-  gh 'neovim/nvim-lspconfig',
-  -- Fuzzy picker
-  gh 'ibhagwan/fzf-lua',
-  -- Autocompletion
-  gh 'nvim-mini/mini.completion',
-  -- Enhanced quickfix/loclist
-  gh 'stevearc/quicker.nvim',
-  -- Git integration
-  gh 'lewis6991/gitsigns.nvim',
-  -- theme
-  gh 'sainnhe/everforest',
-}
 
-require('fzf-lua').setup { fzf_colors = true }
+-- Quickstart configs for LSP
+vim.pack.add({ gh 'neovim/nvim-lspconfig' })
+
+-- Autocompletion
+vim.pack.add({ gh 'nvim-mini/mini.completion' })
 require('mini.completion').setup {}
+
+-- Enhanced quickfix/loclist
+vim.pack.add({ gh 'stevearc/quicker.nvim' })
 require('quicker').setup {}
+
+-- Git integration
+vim.pack.add({ gh 'lewis6991/gitsigns.nvim' })
 require('gitsigns').setup {}
 
-vim.g.everforest_background = 'hard'
-vim.o.background = 'dark'
-vim.cmd.colorscheme('everforest')
+-- Telescope
+vim.pack.add({
+	gh 'nvim-lua/plenary.nvim',
+	gh 'nvim-telescope/telescope.nvim',
+	gh 'nvim-telescope/telescope-fzf-native.nvim',
+})
+require('telescope').setup {}
+-- use native fzf
+require('telescope').load_extension('fzf')
+-- keybinds
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = 'Telescope search files' })
+vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = 'Telescope search live grep' })
+vim.keymap.set('n', '<leader>sb', builtin.buffers, { desc = 'Telescope search buffers' })
+vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = 'Telescope search help tags' })
+
