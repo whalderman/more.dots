@@ -255,6 +255,7 @@ o.bind("SUPER + SHIFT + ALT + F", "File manager", hl.dsp.exec_cmd("omarchy-launc
 o.bind("SUPER + SHIFT + N", "Editor", hl.dsp.exec_cmd("omarchy-launch-editor"))
 o.bind("SUPER + SHIFT + T", "Activity", hl.dsp.exec_cmd("omarchy-launch-tui btop"))
 o.bind("SUPER + SHIFT + C", "Code", hl.dsp.exec_cmd("omarchy-launch-tui code"))
+o.bind("SUPER + SHIFT + L", "Lock PC", hl.dsp.exec_cmd("omarchy-system-lock"))
 
 -- Change an existing binding by unbinding it first, then binding the key again.
 -- This example changes SUPER+SPACE from the launcher to the Omarchy root menu.
